@@ -1,7 +1,7 @@
 const express = require('express')
 const exphbs = require('express-handlebars')
 const mongoose = require('mongoose')
-// const bodyParser =require('body-parser')
+const bodyParser =require('body-parser')
 
 const Account = require('./models/account')
 
@@ -20,8 +20,8 @@ db.once('open', () => {
 
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs'}))
 app.set('view engine', 'hbs')
-app.use(express.static('public'))
-app.use(express.urlencoded({ extended: true }))
+app.use(express.static('public')) // express 載入靜態檔案
+app.use(express.urlencoded({ extended: true })) // setting body-parser
 
 // index
 app.get('/', (req, res) => {
@@ -29,10 +29,12 @@ app.get('/', (req, res) => {
 })
 
 app.post('/login', (req, res) => {
-  // console.log('req.body', req.body)
-  return Account.findOne({ email: req.body.email })
+    const email = req.body.email
+    const password = req.body.password
+  return Account.find()
     .lean()
-    .then((user) => {
+    .then((users) => {
+      const user = users.find(user => user.email === email)
       if (!user) {
         const alert = '該 email 尚未註冊'
         return res.render('login', { alert })

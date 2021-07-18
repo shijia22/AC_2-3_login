@@ -42,11 +42,6 @@ body {
   padding: 12px;
 }
 
-/* Every row inside .login-container is defined with p tags */
-.login p {
-  padding: 12px;
-}
-
 .login input {
   box-sizing: border-box;
   display: block;
