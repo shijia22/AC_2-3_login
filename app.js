@@ -1,11 +1,14 @@
 const express = require('express')
 const exphbs = require('express-handlebars')
 const mongoose = require('mongoose')
-const bodyParser =require('body-parser')
+const bodyParser = require('body-parser')
 
 const Account = require('./models/account')
 
-mongoose.connect('mongodb://localhost/login', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb://localhost/login', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
 
 const app = express()
 const db = mongoose.connection
@@ -18,7 +21,7 @@ db.once('open', () => {
   console.log('mongodb connected!')
 })
 
-app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs'}))
+app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
 app.use(express.static('public')) // express 載入靜態檔案
 app.use(express.urlencoded({ extended: true })) // setting body-parser
@@ -29,12 +32,11 @@ app.get('/', (req, res) => {
 })
 
 app.post('/login', (req, res) => {
-    const email = req.body.email
-    const password = req.body.password
+  const { email, password } = req.body
   return Account.find()
     .lean()
     .then((users) => {
-      const user = users.find(user => user.email === email)
+      const user = users.find((user) => user.email === email)
       if (!user) {
         const alert = '該 email 尚未註冊'
         return res.render('login', { alert })
