@@ -47,6 +47,7 @@ app.post('/login', (req, res) => {
       }
       return res.redirect(`/welcome/${user._id}`)
     })
+    .catch((error) => console.log(error))
 })
 
 app.get('/welcome/:id', (req, res) => {
