@@ -3,7 +3,7 @@ const exphbs = require('express-handlebars')
 const mongoose = require('mongoose')
 const bodyParser =require('body-parser')
 
-const Login = require('./models/login')
+const Account = require('./models/account')
 
 mongoose.connect('mongodb://localhost/login', { useNewUrlParser: true, useUnifiedTopology: true })
 
@@ -28,24 +28,28 @@ app.get('/', (req, res) => {
   res.render('login')
 })
 
-app.post('/', (req, res) => {
-  const account = req.body.account
-  const password = req.body.password
-  Login.find({ email: account })
+app.post('/login', (req, res) => {
+  return Account.findOne({ email: req.body.email })
     .lean()
-    .then((users) => {
-      if (users.length === 0) {
-        console.log('無使用者')
-        const nonUser = 'is-invalid'
-        return res.render('login', { nonUser })
-      } else if (users[0].password !== password) {
-        console.log('打錯密碼')
-        const errorPassword = 'is-invalid'
-        const option = req.body
-        return res.render('login', { errorPassword, option })
-      } else {
-        return res.render('login', { users: users[0] })
+    .then((user) => {
+      if (!user) {
+        const alert = '該 email 尚未註冊'
+        return res.render('login', { alert })
       }
+      if (user.password !== req.body.password) {
+        const alert = '您輸入的密碼有誤'
+        return res.render('login', { alert })
+      }
+      return res.render(`/welcome/${user._id}`)
+    })
+})
+
+app.get('/welcome/:id', (req, res) => {
+  const id = req.params.id
+  return Account.findById(id)
+    .lean()
+    .then((user) => {
+      res.render('welcome', { user })
     })
 })
 

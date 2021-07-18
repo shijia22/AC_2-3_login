@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const Account = require('../Account')
+const Account = require('../account')
 const users = [
   {
     firstName: 'Tony',
