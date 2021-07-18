@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const Login = require('../login')
+const Account = require('../Account')
 const users = [
   {
     firstName: 'Tony',
@@ -37,6 +37,14 @@ const db = mongoose.connection
 db.on('error', () => {
   console.log('mongodb error!')
 })
+
 db.once('open', () => {
   console.log('mongodb connected!')
+  users.forEach((user) => {
+    Account.create({
+      firstName: user.firstName,
+      email: user.email,
+      password: user.password,
+    })
+  })
 })
