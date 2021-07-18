@@ -1,7 +1,7 @@
 const express = require('express')
 const exphbs = require('express-handlebars')
 const mongoose = require('mongoose')
-const bodyParser =require('body-parser')
+// const bodyParser =require('body-parser')
 
 const Account = require('./models/account')
 
@@ -21,7 +21,7 @@ db.once('open', () => {
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs'}))
 app.set('view engine', 'hbs')
 app.use(express.static('public'))
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true }))
 
 // index
 app.get('/', (req, res) => {
@@ -29,6 +29,7 @@ app.get('/', (req, res) => {
 })
 
 app.post('/login', (req, res) => {
+  // console.log('req.body', req.body)
   return Account.findOne({ email: req.body.email })
     .lean()
     .then((user) => {
@@ -40,7 +41,7 @@ app.post('/login', (req, res) => {
         const alert = '您輸入的密碼有誤'
         return res.render('login', { alert })
       }
-      return res.render(`/welcome/${user._id}`)
+      return res.redirect(`/welcome/${user._id}`)
     })
 })
 
