@@ -21,6 +21,8 @@
 - nvm version 0.38.0
 - body-parser 1.19.0
 - mongoose 5.13.3
+- express-session v1.17.2
+- cookie-parser v1.4.5
 
 ## 安裝與執行步驟
 

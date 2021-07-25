@@ -2,6 +2,8 @@ const express = require('express')
 const exphbs = require('express-handlebars')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
+const session = require('express-session')
 
 const Account = require('./models/account')
 
@@ -25,6 +27,19 @@ app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
 app.use(express.static('public')) // express 載入靜態檔案
 app.use(express.urlencoded({ extended: true })) // setting body-parser
+// initialize cookie-parser to allow us access the cookies stored in the browser. 
+app.use(cookieParser())
+app.use(
+  session({
+    key: 'user_sid',
+    secret: 'someRandomStuffs',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      expires: 6000000,
+    },
+  })
+)
 
 // index
 app.get('/', (req, res) => {
